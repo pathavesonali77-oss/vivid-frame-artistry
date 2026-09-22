@@ -10,4 +10,4 @@
 - [x] Send Agnes image generation directly from the browser to bypass the live host's shared address
 - [x] Replace repetitive box-panel prompts with mixed cinematic framing compositions
 - [x] Preserve the original direct-from-browser Agnes image generation path unchanged
-- [ ] Verify the panel-layout-only change and responsive preview
+- [x] Verify the panel-layout-only change and responsive preview
