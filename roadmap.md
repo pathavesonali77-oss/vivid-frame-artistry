@@ -8,3 +8,6 @@
 - [x] Add focused scheduler regression coverage
 - [x] Verify rendering, metadata, and mobile layout
 - [x] Send Agnes image generation directly from the browser to bypass the live host's shared address
+- [x] Replace repetitive box-panel prompts with mixed cinematic framing compositions
+- [x] Remove temporary provider credentials from committed browser source
+- [ ] Verify imported generation flow, runtime configuration, and responsive preview

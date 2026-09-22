@@ -195,26 +195,30 @@ function hash(text: string): number {
   return Math.abs(h);
 }
 
-/**
- * Dynamic manhwa page layouts — never a plain equal grid. Each option is a real
- * published-webtoon composition: tilted frames, uneven weights, one dominant
- * frame, frames that bleed off the page edge and art that breaks a border.
- */
+/** Curated mixed-shape layouts with an obvious reading path and controlled border breaks. */
 const LAYOUTS: Record<number, string[]> = {
   2: [
-    "exactly 2 unequal cinematic horizontal frames: a shallow letterbox establishing strip above one huge dominant action frame, separated by a thick white diagonal gutter with crisp black edge lines; the lower action and energy break beyond its border into the gutter",
-    "exactly 2 unequal frames divided by one steep white diagonal gutter: a compact upper reaction frame and a dominant lower impact frame occupying most of the canvas, with foreground debris and energy crossing the lower border",
-    "exactly 2 frames: one large full-width action frame with a narrow tilted close-up strip cutting across its top edge, thick clean white gutter, strong top-to-bottom reading flow and a border-breaking subject",
+    "exactly 2 unequal cinematic frames: one classic wide rectangular establishing panel behind one overlapping circular focus frame for the decisive face or detail; the circle crosses the rectangle's border, with a clean white halo gutter and one foreground action element breaking outward",
+    "exactly 2 frames split by a dynamic diagonal slash from upper-left to lower-right: a compact reaction wedge and a dominant impact field, with a crisp white slash gutter, speed streaks aligned to the cut, and the focal character breaking across the panel boundary",
+    "exactly 2 frames: one large full-width action panel with a narrow tilted rectangular close-up floating across its upper edge; keep a clear white gutter around the vignette while debris, cloth or energy escapes the large frame into the page margin",
+    "exactly 2 unequal horizontal frames: a shallow classic letterbox setup above a huge borderless atmospheric action field, joined by drifting smoke, rain, light or particles that transition fluidly through the gutter without confusing the reading order",
+    "exactly 2 offset frames: a tall rectangular main scene anchored to one side and a smaller border-breaking circular inset on the opposite side; use purposeful negative space, one diagonal visual trajectory and a subject limb, weapon or effect extending beyond the main frame",
   ],
   3: [
-    "exactly 3 unequal horizontal webtoon frames stacked vertically: a shallow wide establishing strip, a larger full-width power-up frame, then a huge tilted climax frame occupying nearly half the canvas; bold black frame edges, thick white diagonal gutters, effects breaking across the final border",
-    "exactly 3 staggered horizontal bands of clearly different heights: narrow reaction, broad action, dominant impact; each boundary slants in a different direction, leaving clean white gutters while speed lines and debris bridge the action panels",
-    "exactly 3 frames with a slim panoramic top strip, a medium diagonal middle strip and an oversized bottom splash frame; maintain an effortless vertical reading path, deep cinematic crops and one subject breaking the final frame edge",
+    "exactly 3 frames: a slim panoramic setup strip, one overlapping circular reaction close-up at the transition, and one oversized lower splash panel; preserve thick clean gutters while the circle floats partly outside both rectangles and the final subject breaks its outer border",
+    "exactly 3 staggered frames driven by one diagonal slash: a compact upper wedge, a tall rectangular escalation frame, and a dominant impact field; vary every frame's scale, align motion to the slash, and let energy or debris cross only into intentional gutter space",
+    "exactly 3 frames arranged as one classic rectangular anchor with two floating vignette frames of different shapes and sizes; one vignette is circular, one is a tilted narrow crop, and the anchor carries the main action with a border-breaking foreground figure",
+    "exactly 3 unequal horizontal bands: a narrow reaction strip, a broad action rectangle and a borderless atmospheric climax; dissolve the final boundary through smoke, rain, dust, magic light or speed lines while keeping faces and story order unmistakable",
+    "exactly 3 frames with a tall side panel, a compact square detail panel and a wide diagonal bottom panel; connect eye-lines and action vectors across the gutters, with one weapon, limb, coat edge or effect extending outside the final frame",
+    "exactly 3 cinematic frames: a large central splash panel, a small circular focus frame overlapping its upper corner, and a thin rectangular aftermath strip cutting across the bottom; use bold black edges, white breathing space and controlled boundary breaks",
   ],
   4: [
-    "exactly 4 unequal frames in a vertical action rhythm: a thin panoramic setup strip, two compact angled progression frames, then one enormous bottom climax frame; thick white gutters, black edge lines, diagonal cuts and effects crossing only into the gutters",
-    "exactly 4 staggered cinematic bands wrapped around one dominant diagonal action frame, with three smaller reaction and detail strips; strong vertical reading order, broad white gutters and a border-breaking focal figure",
-    "exactly 4 asymmetric frames of dramatically unequal scale: two narrow setup strips, one medium escalation frame and one huge impact splash; steep diagonal white gutters, bold black edges, flying debris and energy extending beyond the climax border",
+    "exactly 4 unequal frames in a vertical action rhythm: a thin panoramic setup strip, a circular reaction inset overlapping its corner, a steep diagonal escalation frame, and one enormous bottom climax splash; effects and the focal figure break the final border into broad white gutters",
+    "exactly 4 frames wrapped around one dominant diagonal action panel: one classic rectangular setup, two small floating vignettes of different proportions, and the dominant slash-cut panel; maintain top-to-bottom flow while energy, debris and fabric cross selected boundaries",
+    "exactly 4 asymmetric frames: two narrow rectangular setup strips, one overlapping circular focus frame and one huge borderless impact field; use fluid smoke, rain, dust or light to transition into the climax without turning the page into an equal grid",
+    "exactly 4 mixed frames: a tall side establishing panel, two offset compact reaction panels separated by diagonal gutters, and a wide bottom splash; the central character or action effect bridges the compact frames and breaks into the final panel",
+    "exactly 4 cinematic frames built around a large classic box panel: a tilted close-up strip crosses its top edge, a circular detail frame floats over one corner, and a border-breaking aftermath strip anchors the bottom; preserve generous white negative space",
+    "exactly 4 frames with a clear Z-shaped reading path: wide setup rectangle, diagonal action wedge, floating circular focus, then oversized rectangular climax; vary crops dramatically and carry one continuous atmospheric effect across gutters as a pacing device",
   ],
 };
 
@@ -257,8 +261,10 @@ export function panelDirective(plan: PanelPlan): string {
       `render this as ONE manhwa comic page in ${layoutOf(plan.frames, plan.body)}, every frame in the same art ` +
         `style with the same characters and the same location, showing consecutive moments of this one scene, ` +
         `cinematic varied camera distance per frame, clear top-to-bottom reading order, dramatic size contrast, ` +
-        `clean white page gutters and bold black frame edges; use a narrow establishing view, a closer escalation view, ` +
-        `and the largest space for the decisive action as applicable`,
+        `clean white page gutters and selectively bold black frame edges; combine classic boxes, rectangular crops, ` +
+        `overlapping focus shapes, diagonal cuts, floating vignettes and fluid atmospheric transitions only as specified ` +
+        `by this composition, never as a plain equal grid; use the largest space for the decisive action and allow ` +
+        `characters, weapons, clothing, debris or energy to break selected borders without obscuring another story beat`,
     );
     plan.beats.forEach((beat, i) => {
       out.push(`the ${ORDINAL[i] ?? `frame ${i + 1}`} frame shows ${beat.replace(/\.$/, "")}`);
