@@ -10,7 +10,6 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as ApiAgnesKeysRouteImport } from './routes/api/agnes-keys'
 import { Route as ApiPromptsRouteImport } from './routes/api/prompts'
 import { Route as ApiProxyImageRouteImport } from './routes/api/proxy-image'
 import { Route as ApiPublicAgnesProbeRouteImport } from './routes/api/public/agnes-probe'
@@ -18,11 +17,6 @@ import { Route as ApiPublicAgnesProbeRouteImport } from './routes/api/public/agn
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiAgnesKeysRoute = ApiAgnesKeysRouteImport.update({
-  id: '/api/agnes-keys',
-  path: '/api/agnes-keys',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPromptsRoute = ApiPromptsRouteImport.update({
@@ -43,14 +37,12 @@ const ApiPublicAgnesProbeRoute = ApiPublicAgnesProbeRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/api/agnes-keys': typeof ApiAgnesKeysRoute
   '/api/prompts': typeof ApiPromptsRoute
   '/api/proxy-image': typeof ApiProxyImageRoute
   '/api/public/agnes-probe': typeof ApiPublicAgnesProbeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/api/agnes-keys': typeof ApiAgnesKeysRoute
   '/api/prompts': typeof ApiPromptsRoute
   '/api/proxy-image': typeof ApiProxyImageRoute
   '/api/public/agnes-probe': typeof ApiPublicAgnesProbeRoute
@@ -58,7 +50,6 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/api/agnes-keys': typeof ApiAgnesKeysRoute
   '/api/prompts': typeof ApiPromptsRoute
   '/api/proxy-image': typeof ApiProxyImageRoute
   '/api/public/agnes-probe': typeof ApiPublicAgnesProbeRoute
@@ -66,22 +57,12 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/'
-    | '/api/agnes-keys'
-    | '/api/prompts'
-    | '/api/proxy-image'
-    | '/api/public/agnes-probe'
+    '/' | '/api/prompts' | '/api/proxy-image' | '/api/public/agnes-probe'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/api/agnes-keys'
-    | '/api/prompts'
-    | '/api/proxy-image'
-    | '/api/public/agnes-probe'
+  to: '/' | '/api/prompts' | '/api/proxy-image' | '/api/public/agnes-probe'
   id:
     | '__root__'
     | '/'
-    | '/api/agnes-keys'
     | '/api/prompts'
     | '/api/proxy-image'
     | '/api/public/agnes-probe'
@@ -89,7 +70,6 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ApiAgnesKeysRoute: typeof ApiAgnesKeysRoute
   ApiPromptsRoute: typeof ApiPromptsRoute
   ApiProxyImageRoute: typeof ApiProxyImageRoute
   ApiPublicAgnesProbeRoute: typeof ApiPublicAgnesProbeRoute
@@ -102,13 +82,6 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/agnes-keys': {
-      id: '/api/agnes-keys'
-      path: '/api/agnes-keys'
-      fullPath: '/api/agnes-keys'
-      preLoaderRoute: typeof ApiAgnesKeysRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/prompts': {
@@ -137,7 +110,6 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ApiAgnesKeysRoute: ApiAgnesKeysRoute,
   ApiPromptsRoute: ApiPromptsRoute,
   ApiProxyImageRoute: ApiProxyImageRoute,
   ApiPublicAgnesProbeRoute: ApiPublicAgnesProbeRoute,
