@@ -9,49 +9,39 @@
  *
  * So the request is made from the visitor's own connection instead. The server
  * still writes every prompt; only the final HTTP call moves into the page.
- * Temporary keys are delivered at runtime rather than committed to source.
+ * The keys are deliberately visible here — the owner asked for that, they are
+ * temporary, and they are replaceable at any time.
  */
 import { panelPayloads } from "./manga.functions";
 
 const AGNES_URL = "https://apihub.agnes-ai.com/v1/images/generations";
 const AGNES_MODEL = "agnes-image-2.5-flash";
 
-let keysPromise: Promise<string[]> | undefined;
-
-function loadKeys(): Promise<string[]> {
-  if (!keysPromise) {
-    keysPromise = fetch("/api/agnes-keys")
-      .then(async (response) => {
-        if (!response.ok) throw new Error((await response.text()) || "Image keys are unavailable");
-        const payload = (await response.json()) as { keys?: unknown };
-        if (!Array.isArray(payload.keys)) throw new Error("Image keys are unavailable");
-        const keys = payload.keys.filter((key): key is string => typeof key === "string" && key.length > 0);
-        if (keys.length === 0) throw new Error("Image keys are unavailable");
-        return keys;
-      })
-      .catch((error) => {
-        keysPromise = undefined;
-        throw error;
-      });
-  }
-  return keysPromise;
-}
+/** Temporary, intentionally public image keys. Replace freely. */
+export const AGNES_KEYS: string[] = [
+  "sk-I04D4YBECov6kYvbrk2JRno1VY2xyGgxWeJNb7pOPZ43q5fG",
+  "sk-OoJrEYImZTN6by4tJoINV0AChxoT5AJyZmKQwcdVBBqDcDZ3",
+  "sk-fLpoyFOy5Z71A6aMNQ3tcNCeYoVecwQ33wuYCZe3dbhOTDsw",
+  "sk-WL5r5FFNnObn2wQjCkkLClWBC3f73PlDBypFTLOb7GFEIoKL",
+  "sk-fe22dNmaZd73KSRYbK3b6os6fRWs6XfJl2xiOWXul1IOBMWy",
+  "sk-wQiIb8lIWUkk7vgTgjg6BsSUJzzUMFlIWe0lrcGi7Zy9O2IA",
+  "sk-309O5z4TSAHpyjJTmHVHjGQxwz3p3u3U1iyMDJMabTHLHyt8",
+  "sk-IqcotNMoQYeQ1CLMaWncXaZI1dTu7VCMEVOGYGcV4yjf7vTC",
+  "sk-dswO8vZF7EQuPKQa1cfH7X3zkIRSn5ykSTsSqLd2b4dAvjWC",
+];
 
 /** Per-key pause after that key itself was throttled. */
 const cooldown = new Map<number, number>();
 let cursor = 0;
 
-function nextKey(keys: string[]): { key: string; slot: number } {
-  for (let hop = 0; hop < keys.length; hop++) {
-    const slot = cursor++ % keys.length;
+function nextKey(): { key: string; slot: number } {
+  for (let hop = 0; hop < AGNES_KEYS.length; hop++) {
+    const slot = cursor++ % AGNES_KEYS.length;
     const until = cooldown.get(slot) ?? 0;
-    const key = keys[slot];
-    if (Date.now() >= until && key) return { key, slot };
+    if (Date.now() >= until) return { key: AGNES_KEYS[slot] as string, slot };
   }
-  const slot = cursor++ % keys.length;
-  const key = keys[slot];
-  if (!key) throw new Error("Image keys are unavailable");
-  return { key, slot };
+  const slot = cursor++ % AGNES_KEYS.length;
+  return { key: AGNES_KEYS[slot] as string, slot };
 }
 
 const REQUEST_TIMEOUT_MS = 90_000;
@@ -89,8 +79,7 @@ async function askForImage(
   prompt: string,
   signal?: AbortSignal,
 ): Promise<{ url?: string; error?: string; throttled?: boolean }> {
-  const keys = await loadKeys();
-  const { key, slot } = nextKey(keys);
+  const { key, slot } = nextKey();
   const stop = new AbortController();
   const timer = setTimeout(() => stop.abort(), REQUEST_TIMEOUT_MS);
   const onAbort = () => stop.abort();
